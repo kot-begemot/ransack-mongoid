@@ -41,7 +41,8 @@ module Ransack
 
         def evaluate(search, opts = {})
           viz = Visitor.new
-          relation = @object.where(viz.accept(search.base))
+          obj = @object.respond_to?(:where) ? @object : @object.try(:criteria)
+          relation = obj.where(viz.accept(search.base))
           if search.sorts.any?
             ary_sorting = viz.accept(search.sorts)
             sorting = {}
